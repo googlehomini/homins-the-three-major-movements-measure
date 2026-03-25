@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    :root { --primary: #ffcc00; --bg: #121212; --card-bg: #1e1e1e; --text: #f0f0f0; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; padding: 0 15px 30px 15px; margin: 0; line-height: 1.6; }
+    .container { max-width: 620px; margin: 20px auto; background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    
+    h1 { text-align: center; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-size: 1.7em; font-weight: 900; }
+    .quote { font-size: 0.85em; color: #999; text-align: center; margin-bottom: 30px; font-weight: 300; }
+    
+    .section { margin-bottom: 25px; background: #262626; padding: 18px; border-radius: 12px; border: 1px solid #333; }
+    h3 { margin-top: 0; color: var(--primary); font-size: 1.05em; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 12px; margin-bottom: 18px; }
+    
+    label { display: block; margin: 12px 0 5px; font-size: 0.85em; color: #bbb; font-weight: 600; }
+    .req { color: var(--primary); margin-left: 4px; font-size: 0.8em; }
+    .opt { color: #00ccff; font-weight: normal; font-size: 0.8em; margin-left: 4px; }
+    input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; font-size: 15px; }
+    
+    button { width: 100%; padding: 18px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.15em; margin-top: 15px; }
+
+    #result { margin-top: 35px; display: none; border-top: 2px solid #333; pt: 25px; }
+    .res-card { background: #2d2d2d; padding: 22px; border-radius: 15px; margin-bottom: 18px; border: 1px solid #444; }
+    .res-title { color: var(--primary); font-weight: 800; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; display: block; font-size: 0.95em; }
+    .val { font-size: 1.45em; font-weight: 800; color: #fff; }
+    
+    .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .time-box { background: #383838; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #444; }
+    .time-box span { display: block; font-size: 0.8em; color: #aaa; margin-bottom: 5px; }
+    .time-box strong { font-size: 1.3em; color: var(--primary); }
+    
+    .macro-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+    .macro-table th { background: #383838; color: #bbb; padding: 10px; border: 1px solid #444; }
+    .macro-table td { padding: 12px; text-align: center; border: 1px solid #444; font-weight: 700; color: #fff; }
+    
+    .bad-food-item { color: #ff6666; font-size: 0.9em; margin-bottom: 10px; }
+    .bad-food-item span { color: #bbb; display: block; margin-top: 3px; font-size: 0.95em; font-weight: 400; line-height: 1.4; }
+    .recommend-box { background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 10px; margin-top: 15px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SMART REPS & RECOVERY</h1>
+    <p class="quote">데이터로 설계하는 최적의 트레이닝 세션</p>
+
+    <div class="section">
+      <h3>STEP 1. PHYSICAL STATUS</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <div style="flex:1;">
+          <label>숙련도<span class="req">(필수)</span></label>
+          <select id="career">
+            <option value="1">입문 (3개월 미만)</option>
+            <option value="2">초급 (6~12개월)</option>
+            <option value="3">중급 (1~2년)</option>
+            <option value="4">상급 (2년 이상)</option>
+          </select>
+        </div>
+        <div style="flex:1;"><label>현재 체중<span class="req">(필수)</span></label><input type="number" id="weight" placeholder="kg"></div>
+      </div>
+      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <div style="flex:1;"><label>신장<span class="req">(필수)</span></label><input type="number" id="height" placeholder="cm"></div>
+        <div style="flex:1;"><label>골격근량<span class="opt">(선택)</span></label><input type="number" id="muscle" placeholder="kg"></div>
+      </div>
+      
+      <label>컨디션 체크</label>
+      <select id="condition">
+        <option value="high">최상 (활력 넘침, 숙면 완료)</option>
+        <option value="normal" selected>보통 (특이사항 없음)</option>
+        <option value="low">저조 (피로 누적, 근육통 있음)</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h3>STEP 2. STRENGTH BENCHMARK</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <div><label>Bench Press</label><input type="number" id="bp_w" placeholder="kg"><input type="number" id="bp_r" placeholder="reps" style="margin-top:5px;"></div>
+        <div><label>Deadlift</label><input type="number" id="dl_w" placeholder="kg"><input type="number" id="dl_r" placeholder="reps" style="margin-top:5px;"></div>
+        <div><label>Squat</label><input type="number" id="sq_w" placeholder="kg"><input type="number" id="sq_r" placeholder="reps" style="margin-top:5px;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>STEP 3. TRAINING GOAL</h3>
+      <label>목표</label>
+      <select id="goal">
+        <option value="bulk">벌크업</option>
+        <option value="base">기초체력 향상</option>
+        <option value="diet">체지방 감소</option>
+      </select>
+    </div>
+
+    <button onclick="analyzeAll()">맞춤형 솔루션 확인하기</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function analyzeAll() {
+      const weight = Number(document.getElementById('weight').value);
+      const height = Number(document.getElementById('height').value);
+      const muscle = Number(document.getElementById('muscle').value);
+      const condition = document.getElementById('condition').value;
+      const goal = document.getElementById('goal').value;
+      const careerLevel = Number(document.getElementById('career').value);
+      
+      if(!weight || !height) { alert("체중과 신장은 필수 입력 항목입니다."); return; }
+
+      const get1RM = (w, r) => w ? (w * (1 + r/30)) : 0;
+      const bp1 = get1RM(Number(document.getElementById('bp_w').value), Number(document.getElementById('bp_r').value));
+      const dl1 = get1RM(Number(document.getElementById('dl_w').value), Number(document.getElementById('dl_r').value));
+      const sq1 = get1RM(Number(document.getElementById('sq_w').value), Number(document.getElementById('sq_r').value));
+
+      let baseSets, baseReps, intensity, wTime, cTime;
+      
+      if(goal === 'bulk') {
+        intensity = 0.82;
+        baseSets = 3 + Math.floor(careerLevel / 2);
+        baseReps = 6 - (condition === 'high' ? 1 : 0);
+        wTime = 80; cTime = 20;
+      } else if(goal === 'diet') {
+        intensity = 0.68;
+        baseSets = 4 + Math.floor(careerLevel / 3);
+        baseReps = 12 + (condition === 'low' ? -2 : 2);
+        wTime = 50; cTime = 45;
+      } else {
+        intensity = 0.75;
+        baseSets = 3 + Math.floor(careerLevel / 3);
+        baseReps = 10;
+        wTime = 60; cTime = 30;
+      }
+
+      let condMultiplier = condition === 'high' ? 1.05 : (condition === 'low' ? 0.9 : 1.0);
+      const calcW = (rm) => rm > 0 ? (Math.round((rm * intensity * condMultiplier) / 2.5) * 2.5 + "kg") : "0kg";
+      
+      const getBadFoods = (g) => {
+        if(g === 'bulk') return [{f:"정제 단순 당류", w:"인슐린 스파이크로 인한 불필요한 체지방 축적"}, {f:"포화지방 함량이 높은 튀김", w:"위장 부담 및 운동 후 영양 흡수 속도 저하"}];
+        if(g === 'diet') return [{f:"액상 과당류", w:"지방 연소 대사를 즉각 중단시키고 공복감 유발"}, {f:"고염분 가공육", w:"나트륨 정체로 인한 부종 및 선명도 저하"}];
+        return [{f:"알코올(음주)", w:"단백질 합성 방해 및 중추신경계 회복 지연"}, {f:"정제 밀가루", w:"급격한 혈당 기복으로 인한 무력감 유발"}];
+      };
+
+      let muscleAnalysis = "";
+      if(muscle > 0) {
+        let ratio = (muscle / weight * 100).toFixed(1);
+        muscleAnalysis = `<p style="font-size:0.85em; color:#00ccff; margin-top:5px;">체중 대비 골격근 비율: <strong>${ratio}%</strong></p>`;
+      }
+
+      document.getElementById('result').innerHTML = `
+        <div class="res-card" style="border: 2px solid var(--primary);">
+          <span class="res-title">🔍 PERFORMANCE ANALYSIS</span>
+          <p>종합 근력 지표(S.B.D): <span class="val">${Math.round(bp1+dl1+sq1)}kg</span></p>
+          ${muscleAnalysis}
+        </div>
+
+        <div class="res-card">
+          <span class="res-title">🏋️ RECOMMENDED ROUTINE</span>
+          <p><strong>Bench Press:</strong> <span class="val">${calcW(bp1)}</span> | ${baseSets}세트 × ${baseReps}회</p>
+          <p><strong>Deadlift:</strong> <span class="val">${calcW(dl1)}</span> | ${baseSets}세트 × ${baseReps - 2}회</p>
+          <p><strong>Squat:</strong> <span class="val">${calcW(sq1)}</span> | ${baseSets}세트 × ${baseReps}회</p>
+        </div>
+
+        <div class="res-card">
+          <span class="res-title">⏱️ TIME ALLOCATION</span>
+          <div class="time-grid">
+            <div class="time-box"><span>웨이트 트레이닝</span><strong>${wTime}분</strong></div>
+            <div class="time-box"><span>유산소 및 정리</span><strong>${cTime}분</strong></div>
+          </div>
+        </div>
+
+        <div class="res-card">
+          <span class="res-title">🥗 NUTRITION STRATEGY</span>
+          <table class="macro-table">
+            <tr><th>탄수화물</th><th>단백질</th><th>지방</th></tr>
+            <tr><td>${Math.round(weight * (goal==='bulk'?5:goal==='diet'?2:3.5))}g</td><td>${Math.round(weight * (goal==='diet'?2.2:1.8))}g</td><td>${Math.round(weight * 0.7)}g</td></tr>
+          </table>
+          <div style="margin-top:20px;">
+            <strong style="font-size:0.9em; color:#ff6666; display:block; margin-bottom:10px;">⚠️ 목표 달성을 위해 멀리해야 할 음식</strong>
+            ${getBadFoods(goal).map(item => `<div class="bad-food-item">• ${item.f}<span>- ${item.w}</span></div>`).join('')}
+          </div>
+        </div>
+      `;
+      document.getElementById('result').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
